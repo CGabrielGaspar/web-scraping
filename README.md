@@ -27,7 +27,7 @@ Quando o seu terminal estiver com esse formato, repare no venv no começo, quer 
 
 Instale os pacotes necessários
 ```
-pip install requirements.txt
+pip install - r requirements.txt
 ```
 
 Rode o script
