@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import pandas
 
 print('Iniciando...')
-url_base = "https://servicos.nc.ufpr.br/documentos/PS2022/aprovados/"
+url_base = "http://resultado.nc.ufpr.br/"
 
 response = get(f"{url_base}")
 home = BeautifulSoup(response.text, 'html.parser')
@@ -14,10 +14,12 @@ children = tables.findChildren("tr")
 
 linhas = BeautifulSoup(f"{home}", 'html.parser').findAll('tr')
 
+print(linhas)
+
 curso_df = pandas.DataFrame(
     columns=["nome", "universidade", "curso", "local", "semestre ingresso", "número de inscrição", "link"])
 
-for curso in linhas[11:]:
+for curso in linhas[4:]:
     infos_curso = BeautifulSoup(f"{curso}", 'html.parser').findAll('td')
 
     dados_curso = infos_curso[0].text.split(" - ")
@@ -49,5 +51,5 @@ for curso in linhas[11:]:
         curso_df = pandas.concat([pandas.DataFrame(curso_dict, index=[-1]), curso_df.loc[:]]).reset_index(drop=True)
 
 print("Salvando arquico xlsx")
-curso_df.to_excel('resultado_ufpr.xlsx')
+curso_df.to_excel('./resultados/resultado_ufprVest(Modelo2).xlsx', index=False)
 print("Finalizado!")

@@ -1,19 +1,18 @@
 from requests import get
 from bs4 import BeautifulSoup
 import pandas
+import json
 
 print('Iniciando...')
-pandas.options.display.max_colwidth = 100
-url_base = "https://cps.uepg.br/inicio/uepg_2022/1"
 
-dados_finais = list()
+with open("./infos/infos.json", "r") as f:
+    infos = json.load(f)
+
+url_base = infos["vestibulares"].get("UEPGVest", {}).get("link_base")
 
 response = get(f"{url_base}/Resultado_UEPG.htm")
-
 home = BeautifulSoup(response.text, 'html.parser')
-
 tables = home.findAll('table')[1]
-
 linhas = BeautifulSoup(f"{tables}", 'html.parser').findAll('tr')
 
 curso_df = pandas.DataFrame(
@@ -58,5 +57,7 @@ for curso in linhas[2:]:
             curso_df = pandas.concat([pandas.DataFrame(curso_dict, index=[-1]), curso_df.loc[:]]).reset_index(drop=True)
 
 print("Salvando arquico xlsx")
-curso_df.to_excel('resultado_uepg-2.xlsx')
+curso_df.to_excel('./resultados/resultado_uepgvest.xlsx', index=False)
 print("Finalizado!")
+
+input()
