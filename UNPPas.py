@@ -7,9 +7,11 @@ import tabula
 
 print("Iniciando...")
 
+# Recupera informações do json.
 with open("./infos/infos.json", "r") as f:
     infos = json.load(f)
 
+# Acessa o site
 link = infos["vestibulares"].get("UNB(PAS)", {}).get("link")
 response = get(link)
 
